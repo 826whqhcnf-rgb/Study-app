@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(1100px 600px at 80% -10%, rgba(91, 77, 255, 0.18), transparent 60%),
+    radial-gradient(900px 500px at -10% 100%, rgba(106, 111, 255, 0.12), transparent 60%),
+    #0a0a0f;
+}
+
+@layer components {
+  .card {
+    @apply bg-ink-900/70 border border-ink-700/60 rounded-2xl shadow-card backdrop-blur-sm;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-medium transition active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-brand-500 hover:bg-brand-400 text-white shadow-[0_8px_24px_-8px_rgba(91,77,255,0.7)];
+  }
+  .btn-ghost {
+    @apply btn bg-ink-800 hover:bg-ink-700 text-ink-100 border border-ink-700;
+  }
+  .btn-danger {
+    @apply btn bg-accent-red/15 hover:bg-accent-red/25 text-accent-red border border-accent-red/30;
+  }
+  .input {
+    @apply w-full bg-ink-850 border border-ink-700 rounded-xl px-3 py-2 text-ink-100 placeholder:text-ink-500 focus:outline-none focus:ring-2 focus:ring-brand-500/60 focus:border-brand-500/60;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-ink-800 border border-ink-700 text-ink-300;
+  }
+}
+
+/* Flashcard flip */
+.flip-card {
+  perspective: 1200px;
+}
+.flip-inner {
+  transform-style: preserve-3d;
+  transition: transform 500ms cubic-bezier(.2,.8,.2,1);
+  position: relative;
+}
+.flip-inner.flipped {
+  transform: rotateY(180deg);
+}
+.flip-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  position: absolute;
+  inset: 0;
+}
+.flip-back {
+  transform: rotateY(180deg);
+}
+
+/* Subtle scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3a55; }
+::-webkit-scrollbar-track { background: transparent; }
