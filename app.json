@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "QuestLog",
+    "slug": "questlog",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "questlog",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.questlog.app"
+    },
+    "android": {
+      "package": "com.questlog.app",
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "tsconfigPaths": true
+    }
+  }
+}
