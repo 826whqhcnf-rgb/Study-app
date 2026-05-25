@@ -16,6 +16,7 @@ import {
   Manrope_700Bold,
 } from '@expo-google-fonts/manrope';
 import { Silkscreen_400Regular } from '@expo-google-fonts/silkscreen';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { colors } from '@/ui/theme';
 import { useStore } from '@/state/store';
 
@@ -34,18 +35,21 @@ export default function RootLayout() {
   });
 
   const bootstrap = useStore((s) => s.bootstrap);
+  const hydrated = useStore((s) => s.hydrated);
   useEffect(() => {
     bootstrap();
   }, [bootstrap]);
 
-  useEffect(() => {
-    if (loaded) SplashScreen.hideAsync().catch(() => {});
-  }, [loaded]);
+  const ready = loaded && hydrated;
 
-  if (!loaded) return <View style={{ flex: 1, backgroundColor: colors.bg }} />;
+  useEffect(() => {
+    if (ready) SplashScreen.hideAsync().catch(() => {});
+  }, [ready]);
+
+  if (!ready) return <View style={{ flex: 1, backgroundColor: colors.bg }} />;
 
   return (
-    <>
+    <SafeAreaProvider>
       <StatusBar style="light" />
       <Stack
         screenOptions={{
@@ -56,6 +60,6 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="settings" options={{ presentation: 'modal' }} />
       </Stack>
-    </>
+    </SafeAreaProvider>
   );
 }
