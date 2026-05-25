@@ -16,9 +16,11 @@ import {
   Manrope_700Bold,
 } from '@expo-google-fonts/manrope';
 import { Silkscreen_400Regular } from '@expo-google-fonts/silkscreen';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { colors } from '@/ui/theme';
 import { useStore } from '@/state/store';
+import { LevelUpModal, XpFlashes } from '@/ui/components';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -49,17 +51,21 @@ export default function RootLayout() {
   if (!ready) return <View style={{ flex: 1, backgroundColor: colors.bg }} />;
 
   return (
-    <SafeAreaProvider>
-      <StatusBar style="light" />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: colors.bg },
-        }}
-      >
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="settings" options={{ presentation: 'modal' }} />
-      </Stack>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.bg }}>
+      <SafeAreaProvider>
+        <StatusBar style="light" />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: colors.bg },
+          }}
+        >
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="settings" options={{ presentation: 'modal' }} />
+        </Stack>
+        <XpFlashes />
+        <LevelUpModal />
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

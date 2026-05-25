@@ -1,17 +1,23 @@
 import { create } from 'zustand';
 import { levelFromXp } from '@/game';
+import { shortId } from '@/lib/id';
 import * as actions from './actions';
 import { freshState } from './initial';
 import { mmkvRepository } from './mmkvRepository';
 import { applyDailyRollover } from './rollover';
 import type { State } from './types';
 
+export type XpFlash = { id: string; amount: number };
+
 type Store = {
   state: State;
   pendingLevelUp: number | null;
+  xpFlashes: XpFlash[];
   hydrated: boolean;
+
   bootstrap: () => void;
   clearPendingLevelUp: () => void;
+  consumeXpFlash: (id: string) => void;
 
   addFoodItem: (name: string, kcal: number | null) => void;
   deleteFoodItem: (id: string) => void;
@@ -41,6 +47,8 @@ type Store = {
   resetAll: () => void;
 };
 
+const FLASH_KEEP = 3;
+
 let saveTimer: ReturnType<typeof setTimeout> | null = null;
 function debouncedSave(state: State) {
   if (saveTimer) clearTimeout(saveTimer);
@@ -51,20 +59,30 @@ export const useStore = create<Store>((set, get) => {
   const apply = (fn: (s: State) => State) => {
     const store = get();
     const beforeLevel = levelFromXp(store.state.xp).level;
+    const beforeXp = store.state.xp;
     const next = fn(store.state);
     if (next === store.state) return;
     const afterLevel = levelFromXp(next.xp).level;
+    const xpDelta = next.xp - beforeXp;
+    const flashes =
+      xpDelta > 0
+        ? [...store.xpFlashes, { id: shortId('x'), amount: xpDelta }].slice(
+            -FLASH_KEEP,
+          )
+        : store.xpFlashes;
     debouncedSave(next);
     set({
       state: next,
       pendingLevelUp:
         afterLevel > beforeLevel ? afterLevel : store.pendingLevelUp,
+      xpFlashes: flashes,
     });
   };
 
   return {
     state: freshState(),
     pendingLevelUp: null,
+    xpFlashes: [],
     hydrated: false,
 
     bootstrap: () => {
@@ -76,6 +94,8 @@ export const useStore = create<Store>((set, get) => {
     },
 
     clearPendingLevelUp: () => set({ pendingLevelUp: null }),
+    consumeXpFlash: (id) =>
+      set((store) => ({ xpFlashes: store.xpFlashes.filter((f) => f.id !== id) })),
 
     addFoodItem: (name, kcal) =>
       apply((s) => actions.addFoodItem(s, new Date(), name, kcal)),
@@ -105,7 +125,7 @@ export const useStore = create<Store>((set, get) => {
       mmkvRepository.clear();
       const blank = freshState();
       debouncedSave(blank);
-      set({ state: blank, pendingLevelUp: null });
+      set({ state: blank, pendingLevelUp: null, xpFlashes: [] });
     },
   };
 });

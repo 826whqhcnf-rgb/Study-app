@@ -6,3 +6,5 @@ export { Section } from './Section';
 export { QuestChip } from './QuestChip';
 export { ScreenCheckinCard } from './ScreenCheckinCard';
 export { HabitsList } from './HabitsList';
+export { LevelUpModal } from './LevelUpModal';
+export { XpFlashes } from './XpFlashes';
