@@ -17,6 +17,7 @@ import {
 } from '@expo-google-fonts/manrope';
 import { Silkscreen_400Regular } from '@expo-google-fonts/silkscreen';
 import { colors } from '@/ui/theme';
+import { useStore } from '@/state/store';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -31,6 +32,11 @@ export default function RootLayout() {
     Manrope_700Bold,
     Silkscreen_400Regular,
   });
+
+  const bootstrap = useStore((s) => s.bootstrap);
+  useEffect(() => {
+    bootstrap();
+  }, [bootstrap]);
 
   useEffect(() => {
     if (loaded) SplashScreen.hideAsync().catch(() => {});
